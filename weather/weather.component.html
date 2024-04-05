@@ -1,0 +1,72 @@
+<!-- weather.component.html -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<div class="group">
+  <div class="top">
+    <h1 class="weather-title">Weather Prediction</h1>
+  </div>
+  <div class="middle">
+    <button class="button1" (click)="toggleWeatherContainer()">Get Weather Details</button>
+    <div class="bar-div"></div>
+    <button class="button2" (click)="getAllWeatherData()">Get All Weather Data</button>
+  </div>
+</div>
+<div class="bottom">
+  <div class="container" *ngIf="showWeatherContainer">
+    <div class="weather-container"
+      [ngStyle]="{ 'background-image': 'url(' + backgroundImageUrl + ')', 'background-size': 'cover' ,}">
+      <form class="weather-form" [formGroup]="weatherForm" (ngSubmit)="getWeather()">
+        <input type="text" formControlName="cityName" placeholder="Enter a city name" class="city-input">
+        <button type="submit" class="get-weather-btn">Get Weather</button>
+      </form>
+      <div *ngIf="WeatherData">
+        <div *ngIf="WeatherData.error" class="error-message">
+          Please enter a valid city name.
+        </div>
+        <div *ngIf="!WeatherData.error" class="weather-info">
+          <h2 class="city-name">{{ WeatherData.name }}</h2>
+          <p class="temperature">Temperature: {{ WeatherData.main.temp - 273.15}}°C</p>
+          <p class="humidity">Humidity: {{ WeatherData.main.humidity }}%</p>
+          <p class="weather-description">Weather: {{ WeatherData.weather[0].description }}</p>
+          <button class="save-button" (click)="saveWeather()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container1" *ngIf="showAllWeatherContainer">
+    <div class="filter">
+      <i class="fas fa-filter" (click)="onFilter()"></i>
+    </div>
+    <div class="filter-popup" *ngIf="showFilterPopup">
+      <div class="checkbox-container">
+        <input type="checkbox" class="ip" (click)="onSelectTempGt()"> Temperature > 25°C
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" class="ip" (click)="onSelectTempLt()"> Temperature < 25°C
+      </div>
+      <div>
+        <button class="apply-button" (click)="apply()">Apply</button>
+      </div>
+    </div>
+    
+    <table class="weather-table" *ngIf="allWeatherData && allWeatherData.length > 0">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Name</th>
+          <th>Temperature</th>
+          <th>Humidity</th>
+          <th>Weather</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of allWeatherData; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ data.cityname }}</td>
+          <td>{{ data.temperature }}°C</td>
+          <td>{{ data.humidity }}%</td>
+          <td>{{ data.weather }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
